@@ -9,11 +9,6 @@ set -e
 
 echo "===== SETUP MYSQL SLAVE (OREGON) ====="
 
-# Isi nilai ini dari output setup-mysql-master.sh
-MASTER_IP="IP_EC2_VIRGINIA_KAMU"
-MASTER_LOG_FILE="mysql-bin.000001"   # ganti sesuai output master
-MASTER_LOG_POS="0"                    # ganti sesuai output master
-
 # 1. Buat database
 echo "[1/4] Buat database..."
 sudo mysql -e "CREATE DATABASE IF NOT EXISTS dbtugasakhir;"
@@ -36,19 +31,19 @@ EOF
 echo "[3/4] Start replikasi..."
 sudo systemctl restart mysql
 sudo mysql -e "
-CHANGE MASTER TO
-  MASTER_HOST='54.159.4.173',
-  MASTER_USER='repl_user',
-  MASTER_PASSWORD='imam1976',
-  MASTER_LOG_FILE='mysql-bin.000001',
-  MASTER_LOG_POS=158;
-START SLAVE;
+CHANGE REPLICATION SOURCE TO
+  SOURCE_HOST='54.159.4.173',
+  SOURCE_USER='repl_user',
+  SOURCE_PASSWORD='imam1976',
+  SOURCE_LOG_FILE='mysql-bin.000001',
+  SOURCE_LOG_POS=158;
 "
+sudo mysql -e "START REPLICA;"
 
 # 4. Cek status replikasi
 echo "[4/4] Cek status replikasi..."
-sudo mysql -e "SHOW SLAVE STATUS\G"
+sudo mysql -e "SHOW REPLICA STATUS\G" | grep -E "Replica_IO_Running|Replica_SQL_Running|Seconds_Behind_Source"
 
 echo ""
 echo "===== SLAVE SIAP ====="
-echo "Pastikan Seconds_Behind_Master = 0 artinya replikasi berjalan normal"
+echo "Pastikan Replica_IO_Running: Yes dan Replica_SQL_Running: Yes"

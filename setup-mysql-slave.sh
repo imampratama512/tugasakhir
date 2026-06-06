@@ -10,7 +10,7 @@ set -e
 echo "===== SETUP MYSQL SLAVE (OREGON) ====="
 
 # Isi nilai ini dari output setup-mysql-master.sh
-MASTER_IP="54.159.4.173"
+MASTER_IP="18.204.121.188"
 MASTER_LOG_FILE="mysql-bin.000001"
 MASTER_LOG_POS="158"
 

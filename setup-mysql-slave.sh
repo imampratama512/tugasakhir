@@ -33,6 +33,7 @@ log_bin = /var/log/mysql/mysql-bin.log
 binlog_do_db = ${DB_NAME}
 bind-address = 0.0.0.0
 relay-log = /var/log/mysql/mysql-relay-bin.log
+slave-skip-errors = 1032
 EOF
 
 sudo systemctl restart mysql
